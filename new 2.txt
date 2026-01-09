@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slim Latrice Multi-Song Player</title>
+<style>
+body { display: flex; justify-content: center; align-items: center; background:#111; height:100vh; margin:0; font-family: Arial, sans-serif; }
+#promo-player { width: 320px; background:#1a1a1a; color:#fff; padding:20px; border-radius:12px; text-align:center; box-shadow:0 0 15px rgba(0,0,0,0.7); }
+.cover img { width:100%; border-radius:8px; animation: pulse 6s infinite alternate; }
+@keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);} }
+#play-btn, #prev-btn, #next-btn { margin:5px; padding:10px 20px; font-size:16px; cursor:pointer; background:#e4007c; border:none; border-radius:8px; color:#fff; }
+#progress-container { width:100%; height:6px; background:#333; margin:12px 0; border-radius:3px; }
+#progress { height:6px; width:0%; background:#e4007c; border-radius:3px; }
+.cta-btn { display:inline-block; margin-top:12px; padding:10px 20px; background:#ff007f; color:#fff; text-decoration:none; border-radius:8px; }
+</style>
+</head>
+<body>
+<div id="promo-player">
+  <div class="cover">
+    <img id="cover-img" src="slim-latrice-cover.jpg" alt="Slim Latrice">
+  </div>
+  <div class="info">
+    <h3 id="track-title">Head Bussa</h3>
+    <p>Digital Femme Fatale | AI Artist</p>
+  </div>
+  <audio id="audio" src="head-bussa.mp3"></audio>
+  <div>
+    <button id="prev-btn">⏮️ Prev</button>
+    <button id="play-btn">▶️ Play</button>
+    <button id="next-btn">⏭️ Next</button>
+  </div>
+  <div id="progress-container">
+    <div id="progress"></div>
+  </div>
+  <a class="cta-btn" href="https://linktr.ee/slimlatrice" target="_blank">Listen / Support</a>
+</div>
+
+<script>
+const tracks = [
+  {title:"Head Bussa", file:"head-bussa.mp3", cover:"slim-latrice-cover.jpg"},
+  {title:"Succubus", file:"succubus.mp3", cover:"succubus-cover.jpg"},
+  {title:"Another Song", file:"another-song.mp3", cover:"another-cover.jpg"}
+];
+
+let currentTrack = 0;
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('play-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const progress = document.getElementById('progress');
+const trackTitle = document.getElementById('track-title');
+const coverImg = document.getElementById('cover-img');
+
+function loadTrack(index){
+  audio.src = tracks[index].file;
+  trackTitle.textContent = tracks[index].title;
+  coverImg.src = tracks[index].cover;
+  audio.pause();
+  playBtn.textContent = '▶️ Play';
+}
+
+playBtn.addEventListener('click', () => {
+  if(audio.paused){ audio.play(); playBtn.textContent='⏸️ Pause'; }
+  else{ audio.pause(); playBtn.textContent='▶️ Play'; }
+});
+
+prevBtn.addEventListener('click', () => { currentTrack = (currentTrack-1+tracks.length)%tracks.length; loadTrack(currentTrack); });
+nextBtn.addEventListener('click', () => { currentTrack = (currentTrack+1)%tracks.length; loadTrack(currentTrack); });
+
+audio.addEventListener('timeupdate', () => { progress.style.width = (audio.currentTime/audio.duration)*100 + '%'; });
+</script>
+</body>
+</html>
